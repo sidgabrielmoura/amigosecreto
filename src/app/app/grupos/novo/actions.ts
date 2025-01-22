@@ -1,11 +1,14 @@
 "use server"
 import { createClient } from "@/../utils/supabase/server"
+import { Resend } from 'resend'
 import { useToast } from "@/hooks/use-toast"
 import { redirect } from "next/navigation"
+import { useState } from "react"
 
 export type CreateGroupState = {
     success: null | boolean,
-    message?: string
+    message?: string,
+    redirectTo?: string
 }
 
 export async function createGroup(
@@ -72,12 +75,22 @@ export async function createGroup(
                 message: "Ocorreu um erro ao sortear os participantes. Por favor, tente novamente"
             };
         }
-
+        
         return {
             success: true,
-            message: `Grupo '${groupName}' criado com sucesso!`,
+            message: "Grupos criados com sucesso.",
+            redirectTo: `/app/grupos/${newGroup.id}`
         };
 
+        // const { error: errorResend }: any = await sendEmailToParticipants(drawnParticipants, groupName as string)
+
+
+        // if (errorResend) {
+        //     return {
+        //         success: false,
+        //         message: errorResend
+        //     };
+        // }
     } catch (error) {
         return {
             success: false,
@@ -117,4 +130,25 @@ const drawGroup = (participants: Participant[]) => {
         }
     })
 
+}
+
+const sendEmailToParticipants = async (participants: Participant[], groupName: string) => {
+    const resend = new Resend(process.env.RESEND_API_KEY)
+    try {
+        await Promise.all(
+            participants.map(participant => {
+                return resend.emails.send({
+                    from: "sidgabrielmoura40@gmail.com",
+                    to: participant.email,
+                    subject: `Sorteio do amigo secreto para o grupo ${groupName}`,
+                    html: `<p>Você está participando do amigo secreto no grupo "${groupName}". <br /> <br />
+                    O seu amigo secreto é: <strong>${participants.find(p => p.id === participant.assigned_to)?.name}</strong>  
+                    </p>`,
+                });
+            })
+        );
+        return null
+    } catch (err) {
+        return { error: "Ocorreu um erro ao enviar os emails" }
+    }
 }

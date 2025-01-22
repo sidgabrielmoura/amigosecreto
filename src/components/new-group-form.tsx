@@ -9,6 +9,7 @@ import { Loader, Mail, Trash2 } from "lucide-react";
 import { Separator } from "./ui/separator";
 import { createGroup, CreateGroupState } from "@/app/app/grupos/novo/actions";
 import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "next/navigation"
 
 interface Participant {
     name: string,
@@ -16,6 +17,7 @@ interface Participant {
 }
 
 export default function NewGroupForm({ loggedUser }: { loggedUser: { email: string; id: string } }) {
+    const router = useRouter();
     const toast = useToast()
 
     const [participants, setParticipants] = useState<Participant[]>([
@@ -39,6 +41,12 @@ export default function NewGroupForm({ loggedUser }: { loggedUser: { email: stri
         success: null,
         message: ""
     })
+
+    useEffect(() => {
+        if (state.success && state.redirectTo) {
+            router.push(state.redirectTo)
+        }
+    }, [state, router])
 
     const updateParticipant = (index: number, field: keyof Participant, value: string) => {
         const updatedParticipants = [...participants]

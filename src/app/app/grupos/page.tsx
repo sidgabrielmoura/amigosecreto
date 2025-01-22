@@ -31,21 +31,27 @@ export default async function GroupsPage(){
 
                 <ScrollArea className="h-[calc(100vh-200px)]">
                     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                        {data?.map((group) => (
-                            <Link href={`/app/grupos/${group.id}`} key={group.id} className="cursor-pointer">
-                                <Card className="overflow-hidden">
-                                    <CardHeader className="pb-2">
-                                        <CardTitle>{group.name}</CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                        <div className="flex items-center text-sm text-muted-foreground mb-2">
-                                            <Calendar className="size-4 mr-2"/>
-                                            {new Date(group.created_at).toLocaleDateString()}
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            </Link>
-                        ))}
+                        {data ? (
+                            <>
+                                {data?.map((group) => (
+                                    <Link href={`/app/grupos/${group.id}`} key={group.id} className="cursor-pointer">
+                                        <Card className="overflow-hidden">
+                                            <CardHeader className="pb-2">
+                                                <CardTitle>{group.name}</CardTitle>
+                                            </CardHeader>
+                                            <CardContent>
+                                                <div className="flex items-center text-sm text-muted-foreground mb-2">
+                                                    <Calendar className="size-4 mr-2"/>
+                                                    {new Date(group.created_at).toLocaleDateString()}
+                                                </div>
+                                            </CardContent>
+                                        </Card>
+                                    </Link>
+                                ))}
+                            </>
+                        ) : (
+                            <p className="mt-2 w-full py-4 flex items-center justify-center font-thin text-[20px] rounded-2xl border border-zinc-600">não existe nenhum grupo no momento, crie um agora!</p>
+                        )}
                     </div>
                 </ScrollArea>
             </main>

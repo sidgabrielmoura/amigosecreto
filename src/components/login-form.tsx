@@ -1,6 +1,6 @@
 'use client'
 
-import { useActionState } from "react"
+import { useActionState, useEffect, useState } from "react"
 import { Button } from "./ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card"
 import { Input } from "./ui/input"
@@ -8,8 +8,25 @@ import { Label } from "./ui/label"
 import { login, LoginState } from "@/app/(auth)/login/actions"
 import { Alert, AlertDescription, AlertTitle } from "./ui/alert"
 import { Loader, MessageCircle } from "lucide-react"
+import { createClient } from "../../utils/supabase/client"
+import { redirect, useRouter } from "next/navigation"
 
 export default function LoginForm() {
+    const router = useRouter()
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const supabase = await createClient()
+            const { data: { user } } = await supabase.auth.getUser()
+
+            if (user && user.email) {
+                router.push('/app')
+            }
+        }
+
+        fetchUser()
+    }, [router])
+
 
     const [state, formAction, pending] = useActionState<LoginState, FormData>(
         login,
@@ -21,7 +38,7 @@ export default function LoginForm() {
 
     return(
         <>
-            <Card className="mx-auto max-w-sm">
+            <Card className="mx-auto w-96">
                 <CardHeader>
                     <CardTitle className="text-2xl">Login</CardTitle>
                     <CardDescription>

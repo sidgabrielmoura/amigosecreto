@@ -13,7 +13,7 @@ export default function RemoveGroupButton({ groupId }: { groupId: any }) {
 
         if (response.success) {
             alert(response.message);
-            window.location.href = response.redirectTo || "/";
+            window.location.href = response.redirectTo || "/app";
         } else {
             alert(response.message);
         }

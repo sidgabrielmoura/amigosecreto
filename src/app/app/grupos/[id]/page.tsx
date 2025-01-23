@@ -1,8 +1,17 @@
 import { createClient } from "@/../utils/supabase/server"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { TextRevealCard, TextRevealCardTitle } from "@/components/ui/text-reveal-card"
+import { Trash2 } from "lucide-react"
+import { useState } from "react"
+import { RemoveGroup } from "./actions"
+import RemoveGroupButton from "@/components/removeGroupButton"
+
+interface Group {
+    id: number
+}
 
 export default async function GrupoIdPage({ params }: { params: Promise<{ id: string }> }){
 
@@ -13,6 +22,7 @@ export default async function GrupoIdPage({ params }: { params: Promise<{ id: st
 
     const { data, error } = await supabase.from('groups').select(`
         name,
+        id,
         participants (*) 
     `).eq("id", groupId).single()
 
@@ -32,6 +42,7 @@ export default async function GrupoIdPage({ params }: { params: Promise<{ id: st
                                 Grupo{" "} 
                                 <span className="font-thin">{data.name}</span>
                             </CardTitle>
+                            <RemoveGroupButton groupId={groupId}/>
                         </div>
                         <CardDescription>
                             Informações do grupo e participantes

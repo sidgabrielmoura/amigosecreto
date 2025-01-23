@@ -1,8 +1,10 @@
 import { createClient } from "@/../utils/supabase/server"
+import RemoveGroupButton from "@/components/removeGroupButton"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Separator } from "@/components/ui/separator"
-import { Calendar } from "lucide-react"
+import { Calendar, Trash2 } from "lucide-react"
 import Link from "next/link"
 
 export default async function GroupsPage(){
@@ -21,7 +23,6 @@ export default async function GroupsPage(){
     if(error){
         <p>Erro ao carregar grupos</p>
     }
-
     return(
         <>
             <main className="container mx-auto p-4">
@@ -30,29 +31,34 @@ export default async function GroupsPage(){
                 <Separator className="my-4"/>
 
                 <ScrollArea className="h-[calc(100vh-200px)]">
-                    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-                        {data ? (
-                            <>
-                                {data?.map((group) => (
-                                    <Link href={`/app/grupos/${group.id}`} key={group.id} className="cursor-pointer">
-                                        <Card className="overflow-hidden">
-                                            <CardHeader className="pb-2">
-                                                <CardTitle>{group.name}</CardTitle>
-                                            </CardHeader>
-                                            <CardContent>
-                                                <div className="flex items-center text-sm text-muted-foreground mb-2">
-                                                    <Calendar className="size-4 mr-2"/>
-                                                    {new Date(group.created_at).toLocaleDateString()}
+                    {data && data.length > 0 ? (
+                        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                                <>
+                                    {data?.map((group) => (
+                                        <Link href={`/app/grupos/${group.id}`} key={group.id} className="cursor-pointer">
+                                            <Card className="overflow-hidden flex justify-between items-center">
+                                                <div>
+                                                    <CardHeader className="pb-2">
+                                                        <CardTitle>{group.name}</CardTitle>
+                                                    </CardHeader>
+                                                    <CardContent>
+                                                        <div className="flex items-center text-sm text-muted-foreground mb-2">
+                                                            <Calendar className="size-4 mr-2"/>
+                                                            {new Date(group.created_at).toLocaleDateString()}
+                                                        </div>
+                                                    </CardContent>
                                                 </div>
-                                            </CardContent>
-                                        </Card>
-                                    </Link>
-                                ))}
-                            </>
-                        ) : (
-                            <p className="mt-2 w-full py-4 flex items-center justify-center font-thin text-[20px] rounded-2xl border border-zinc-600">não existe nenhum grupo no momento, crie um agora!</p>
-                        )}
-                    </div>
+                                                <div className="mr-7">
+                                                    <RemoveGroupButton groupId={group.id}/>
+                                                </div>
+                                            </Card>
+                                        </Link>
+                                    ))}
+                                </>
+                        </div>
+                    ) : (
+                        <p className="mt-2 w-full py-4 flex items-center justify-center font-bold text-[13px] md:text-[20px] rounded-2xl border border-zinc-700/20 bg-amber-600">não existe nenhum grupo no momento, crie um agora!</p>
+                    )}
                 </ScrollArea>
             </main>
         </>

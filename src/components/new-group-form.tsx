@@ -48,8 +48,34 @@ export default function NewGroupForm({ loggedUser }: { loggedUser: { email: stri
         }
     }, [state, router])
 
+    const [errors, setErrors] = useState<Record<number, string>>({});
     const updateParticipant = (index: number, field: keyof Participant, value: string) => {
+
         const updatedParticipants = [...participants]
+        const updatedErrors = { ...errors };
+
+        if (field === "email") {
+            // Verifica se o email já existe na lista, ignorando o índice atual
+            const emailAlreadyExists = updatedParticipants.some(
+                (participant, i) => participant.email === value && i !== index
+            );
+    
+            if (emailAlreadyExists) {
+                updatedErrors[index] = "Este email já está sendo usado por outro participante";
+                setErrors(updatedErrors);
+                return;
+            }
+    
+            if (value === loggedUser.email) {
+                updatedErrors[index] = "O email do administrador do grupo não pode ser repetido";
+                setErrors(updatedErrors);
+                return;
+            }
+        }
+    
+        // Remove erro, se o campo for válido
+        delete updatedErrors[index];
+        setErrors(updatedErrors)
         updatedParticipants[index][field] = value
         setParticipants(updatedParticipants)
     }
@@ -87,41 +113,48 @@ export default function NewGroupForm({ loggedUser }: { loggedUser: { email: stri
 
                     <h2 className="!mt-12">Participantes</h2>
                     {participants.map((participant, index) => (
-                        <div key={index} className="flex flex-col md:flex-row gap-3 items-end">
-                            <div className="flex-grow space-y-2 w-full">
-                                <Label htmlFor={`name-${index}`}>Nome</Label>
-                                <Input 
-                                    id={`name-${index}`} 
-                                    name="name" 
-                                    value={participant.name}
-                                    placeholder="digíte o nome do seu amigo" 
-                                    onChange={(e) => {updateParticipant(index, "name", e.target.value)}}
-                                    required
-                                />
-                            </div>
+                        <div key={index}>
+                            <div className="flex flex-col md:flex-row gap-3 items-end">
+                                <div className="flex-grow space-y-2 w-full">
+                                    <Label htmlFor={`name-${index}`}>Nome</Label>
+                                    <Input 
+                                        id={`name-${index}`} 
+                                        name="name" 
+                                        value={participant.name}
+                                        placeholder="digíte o nome do seu amigo" 
+                                        onChange={(e) => {updateParticipant(index, "name", e.target.value)}}
+                                        required
+                                    />
+                                </div>
 
-                            <div className="flex-grow space-y-2 w-full">
-                                <Label htmlFor={`email-${index}`}>Email</Label>
-                                <Input 
-                                    type="email" 
-                                    placeholder="digíte o email do seu amigo"
-                                    id={`email-${index}`} 
-                                    name="email" 
-                                    value={participant.email} 
-                                    onChange={(e) => {updateParticipant(index, "email", e.target.value)}}
-                                    className="read-only:text-muted-foreground"
-                                    readOnly={participant.email === loggedUser.email}
-                                    required
-                                />
-                            </div>
+                                <div className="flex-grow space-y-2 w-full">
+                                    <Label htmlFor={`email-${index}`}>Email</Label>
+                                    <Input 
+                                        type="email" 
+                                        placeholder="digíte o email do seu amigo"
+                                        id={`email-${index}`} 
+                                        name="email" 
+                                        value={participant.email} 
+                                        onChange={(e) => {updateParticipant(index, "email", e.target.value)}}
+                                        className="read-only:text-muted-foreground"
+                                        readOnly={participant.email === loggedUser.email}
+                                        required
+                                    />
+                                </div>
 
-                            <div className="min-w-9">
-                                {participants.length > 1 && participant.email !== loggedUser.email && (
-                                    <Button type="button" variant={"outline"} size={"icon"} onClick={() => removeParticipant(index)}>
-                                        <Trash2 className="size-4"/>
-                                    </Button>
-                                )}
+                                <div className="min-w-9">
+                                    {participants.length > 1 && participant.email !== loggedUser.email && (
+                                        <Button type="button" variant={"outline"} size={"icon"} onClick={() => removeParticipant(index)}>
+                                            <Trash2 className="size-4"/>
+                                        </Button>
+                                    )}
+                                </div>
                             </div>
+                            
+                            {errors[index] && (
+                                <div className="text-red-600 text-[12px] flex justify-end mt-3">{errors[index]}</div>
+                            )}
+
                         </div>
                     ))}
                 </CardContent>

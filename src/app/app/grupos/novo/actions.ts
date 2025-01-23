@@ -76,12 +76,6 @@ export async function createGroup(
             };
         }
         
-        return {
-            success: true,
-            message: "Grupos criados com sucesso.",
-            redirectTo: `/app/grupos/${newGroup.id}`
-        };
-
         // const { error: errorResend }: any = await sendEmailToParticipants(drawnParticipants, groupName as string)
 
 
@@ -91,6 +85,13 @@ export async function createGroup(
         //         message: errorResend
         //     };
         // }
+        
+        return {
+            success: true,
+            message: "Grupos criados com sucesso.",
+            redirectTo: `/app/grupos/${newGroup.id}`
+        };
+
     } catch (error) {
         return {
             success: false,

@@ -66,7 +66,7 @@ export default async function GrupoIdPage({ params }: { params: Promise<{ id: st
                             className="w-full"
                         >
                             <TextRevealCardTitle>
-                                Descubra que é o seu amigo secreto!
+                                Seu amigo secreto!
                             </TextRevealCardTitle>
                         </TextRevealCard>
                     </CardContent>

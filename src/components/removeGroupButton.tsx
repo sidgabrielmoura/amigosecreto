@@ -12,8 +12,7 @@ export default function RemoveGroupButton({ groupId }: { groupId: any }) {
         const response = await RemoveGroup(groupId);
 
         if (response.success) {
-            alert(response.message);
-            window.location.href = response.redirectTo || "/app";
+            alert(response.message)
         } else {
             alert(response.message);
         }

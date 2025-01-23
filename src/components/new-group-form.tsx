@@ -55,7 +55,6 @@ export default function NewGroupForm({ loggedUser }: { loggedUser: { email: stri
         const updatedErrors = { ...errors };
 
         if (field === "email") {
-            // Verifica se o email já existe na lista, ignorando o índice atual
             const emailAlreadyExists = updatedParticipants.some(
                 (participant, i) => participant.email === value && i !== index
             );
@@ -72,10 +71,9 @@ export default function NewGroupForm({ loggedUser }: { loggedUser: { email: stri
                 return;
             }
         }
-    
-        // Remove erro, se o campo for válido
         delete updatedErrors[index];
         setErrors(updatedErrors)
+        
         updatedParticipants[index][field] = value
         setParticipants(updatedParticipants)
     }

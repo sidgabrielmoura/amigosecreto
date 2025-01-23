@@ -48,9 +48,6 @@ export default async function GroupsPage(){
                                                         </div>
                                                     </CardContent>
                                                 </div>
-                                                <div className="mr-7">
-                                                    <RemoveGroupButton groupId={group.id}/>
-                                                </div>
                                             </Card>
                                         </Link>
                                     ))}

@@ -1,26 +1,24 @@
 "use server"
 import { createClient } from "@/../utils/supabase/server"
+import { redirect } from "next/navigation";
 
 export type RemoveGroupState = {
     success: null | boolean,
     message?: string,
-    redirectTo?: string
 }
 
 export async function RemoveGroup(groupId: string): Promise<RemoveGroupState> {
     const supabase = await createClient();
 
     try {
-        // Obtém o usuário autenticado
         const { data: authUser, error: authError } = await supabase.auth.getUser();
         if (authError || !authUser.user) {
             return {
                 success: false,
                 message: "Erro ao verificar o usuário autenticado."
-            };
+            }
         }
 
-        // Verifica se o usuário é permitido a remover o grupo (opcional, com validação de permissão)
         const { data: group, error: groupError } = await supabase
             .from("groups")
             .select("owner_id")
@@ -34,12 +32,11 @@ export async function RemoveGroup(groupId: string): Promise<RemoveGroupState> {
             };
         }
 
-        // Remove o grupo
         const { error: deleteError } = await supabase
-            .from("groups")
-            .delete()
-            .eq("id", groupId);
-
+        .from("groups")
+        .delete()
+        .eq("id", groupId)
+        
         if (deleteError) {
             return {
                 success: false,
@@ -50,7 +47,6 @@ export async function RemoveGroup(groupId: string): Promise<RemoveGroupState> {
         return {
             success: true,
             message: "Grupo removido com sucesso.",
-            redirectTo: "/app/grupos"
         };
 
     } catch (error) {

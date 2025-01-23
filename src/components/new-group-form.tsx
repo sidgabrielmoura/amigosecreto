@@ -79,7 +79,7 @@ export default function NewGroupForm({ loggedUser }: { loggedUser: { email: stri
                 <CardDescription>Convide seus amigos para participar</CardDescription>
             </CardHeader>
             <form action={formAction}>
-                <CardContent className="space-y-4 max-h-[500px] overflow-y-auto">
+                <CardContent className="space-y-4 max-h-[350px] overflow-y-auto">
                     <div className="space-y-2">
                         <Label htmlFor="group-name">Nome do grupo</Label>
                         <Input id="group-name" name="group-name" value={groupName} onChange={(e) => setGroupName(e.target.value)} placeholder="Digite o nome do grupo" required/>

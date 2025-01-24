@@ -1,11 +1,13 @@
+'use client'
 import { useToast } from "@/hooks/use-toast";
 import { Logout } from "./actions";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { LogOutIcon } from "lucide-react";
 
 export default function LogoutPage(){
     const toast = useToast()
+    const router = useRouter()
 
     const handleLogout = async () => {
         const { success, message, redirectTo } = await Logout();
@@ -17,7 +19,7 @@ export default function LogoutPage(){
             })
             if (redirectTo) {
                 setTimeout(() => {
-                    redirect(redirectTo)
+                    router.push(redirectTo)
                 }, 1000)
             }
         } else {

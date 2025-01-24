@@ -34,7 +34,7 @@ export async function createGroup(
             return {
                 success: false,
                 message: "Dados inválidos para criação do grupo.",
-            };
+            }
         }
 
         const { data: newGroup, error } = await supabase.from("groups").insert({

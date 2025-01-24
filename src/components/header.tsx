@@ -1,7 +1,9 @@
-import { Gift, Menu, Plus, UsersRound } from "lucide-react";
+"use client"
+import { Gift, Menu, Plus, UsersRound, LogOutIcon } from "lucide-react";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { DropdownMenuShortcut, DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuGroup, DropdownMenuItem, DropdownMenuSub, DropdownMenuSubTrigger, DropdownMenuPortal, DropdownMenuSubContent } from "./ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuGroup, DropdownMenuItem } from "./ui/dropdown-menu";
+import LogoutPage from "@/app/(auth)/logout/page";
 
 export default function Header() {
     return (
@@ -14,7 +16,9 @@ export default function Header() {
                     </Link>
 
                     <nav className="flex items-center gap-4 max-md:hidden">
-                        <Link href={'/app/grupos'} className="text-foreground text-sm flex items-center gap-2">
+                        <LogoutPage/>
+
+                        <Link href={'/app/grupos'} className="text-foreground text-sm flex items-center gap-2 w-full text-wrap">
                             <UsersRound className="size-4" />
                             Meus grupos
                         </Link>
@@ -42,6 +46,9 @@ export default function Header() {
                                         <UsersRound className="size-4" />
                                         Meus grupos
                                     </Link>
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                    <LogoutPage/>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem>
                                     <Link href={"/app/grupos/novo"} className="text-foreground text-sm flex items-center gap-2 border-t-2 w-full justify-center pt-2">
